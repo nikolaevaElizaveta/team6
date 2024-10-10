@@ -43,12 +43,12 @@ Once all services are running, you can send requests to the services. Here are s
 
 ### 1. Register a User
 ```bash
-Invoke-WebRequest -Uri http://localhost:5000/register -Method POST -Headers @{ "Content-Type" = "application/json" } -Body '{"username": "your_username"}'
+Invoke-WebRequest -Uri "http://localhost:5001/register" -Method Post -Headers @{"Content-Type"="application/json"} -Body '{"username": "user1"}'
 ```
 
 ### 2. Post a Message
 ```bash
-Invoke-WebRequest -Uri http://localhost:5001/messages -Method POST -Headers @{ "Content-Type" = "application/json" } -Body '{"username": "your_username", "message": "Hello, world!"}'
+Invoke-WebRequest -Uri "http://localhost:5002/post" -Method Post -Headers @{"Content-Type"="application/json"} -Body '{"username": "user1", "message": "Hello, world!"}'
 ```
 
 ### 3. Get Feeds
@@ -58,7 +58,7 @@ Invoke-WebRequest -Uri "http://localhost:5002/feed" -Method Get
 
 ### 4. Like a Message
 ```bash
-Invoke-WebRequest -Uri http://localhost:5002/like -Method POST -Headers @{ "Content-Type" = "application/json" } -Body '{"message_id": 1, "username": "your_username"}'
+Invoke-WebRequest -Uri "http://localhost:5003/like" -Method Post -Headers @{"Content-Type"="application/json"} -Body '{"message_id": 1}'
 ```
 
 ### 5. Get a Number of Likes
