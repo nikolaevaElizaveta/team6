@@ -1,21 +1,36 @@
 from flask import Flask, request, jsonify
+import requests
 
 app = Flask(__name__)
 
-likes = {}  # Словарь для хранения лайков сообщений
+likes = {}  # dict for storing likes
+
+MESSAGE_SERVICE_URL = 'http://localhost:5002'
+
 
 @app.route('/like', methods=['POST'])
 def like_message():
     message_id = request.json.get('message_id')
-    if message_id not in likes:
-        likes[message_id] = 0
-    likes[message_id] += 1
-    return jsonify({'message': 'Message liked!'}), 201
+    key = str(message_id)
+
+    response = requests.get(f'{MESSAGE_SERVICE_URL}/message_check', params={'message': message_id})
+    # simple check if message exists
+
+    if response.status_code != 200:
+        return jsonify({'message': f'Message with id {message_id} not found!'}), 403
+
+    if not likes.get(key):
+        likes.setdefault(key, 1)
+    else:
+        likes[key] += 1
+    return jsonify({'message': f'Message liked!'}), 201
+
 
 @app.route('/likes', methods=['GET'])
 def get_likes():
     message_id = request.args.get('message_id')
-    return jsonify({'likes': likes.get(message_id, 0)}), 200
+    return jsonify({'likes': likes.get(f"{message_id}", "Not found")}), 200
+
 
 if __name__ == '__main__':
-    app.run(port=5003)  # Запускаем сервис на порту 5003
+    app.run(port=5003)  # running service on port 5003
